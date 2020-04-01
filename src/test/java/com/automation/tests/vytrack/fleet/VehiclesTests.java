@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
  - in this test, you will need to navigate to Fleet --> Vehicles and verify that page subtitle is equals to "All Cars"
  user assertions for validation.
  */
-public class VehiclesPageTests {
+public class VehiclesTests {
     private String URL = "https://qa2.vytrack.com/user/login";
     //    CREDENTIALS FOR store manager
     private String username = "storemanager85";
@@ -33,10 +33,48 @@ public class VehiclesPageTests {
 
     private By fleetBy = By.xpath("//span[@class='title title-level-1' and contains(text(),'Fleet')]");
     private By subtitleBy = By.className("oro-subtitle");
+    private By pageNumberBy = By.cssSelector("input[type='number']");
+
     private WebDriver driver;
 
     @Test
     public void verifyPageSubTitle(){
+//################################################################
+        //find subtitle element
+        WebElement subTitleElement = driver.findElement(subtitleBy);
+        System.out.println(subTitleElement.getText());
+
+        String expected = "All Cars";
+        String actual = subTitleElement.getText();
+
+        Assert.assertEquals(actual, expected);
+    }
+
+    /**
+     *
+     *     ################ TASK 7 minutes until 3:48
+     *
+     *     Given user is on the vytrack landing page
+     *     When user logs on as a store manager
+     *     Then user navigates to Fleet --> Vehicles
+     *     And user verifies that page number is equals to "1"
+     */
+    @Test
+    public void verifyPageNumber(){
+        String expected = "1";
+        String actual = driver.findElement(pageNumberBy).getAttribute("value");
+
+        Assert.assertEquals(actual, expected);
+    }
+
+
+
+    @BeforeMethod
+    public void setup() {
+        WebDriverManager.chromedriver().version("79").setup();
+        driver = new ChromeDriver();
+        driver.get(URL);
+        driver.manage().window().maximize();
         //login
         driver.findElement(usernameBy).sendKeys(username);
         driver.findElement(passwordBy).sendKeys(password, Keys.ENTER);
@@ -60,40 +98,6 @@ public class VehiclesPageTests {
         //put more wait time if you are getting Cars, Dashboard...
         //this application is slooooow...
         BrowserUtils.wait(5);
-
-        //find subtitle element
-        WebElement subTitleElement = driver.findElement(subtitleBy);
-        System.out.println(subTitleElement.getText());
-
-        String expected = "All Cars";
-        String actual = subTitleElement.getText();
-
-        Assert.assertEquals(actual, expected);
-
-    }
-
-    /**
-     *
-     *     ################ TASK 5 minutes
-     *
-     *     Given user is on the vytrack landing page
-     *     When user logs on as a store manager
-     *     Then user navigates to Fleet --> Vehicles
-     *     And user verifies that page number is equals to "1"
-     */
-    @Test
-    public void verifyPageNumber(){
-
-    }
-
-
-
-    @BeforeMethod
-    public void setup() {
-        WebDriverManager.chromedriver().version("79").setup();
-        driver = new ChromeDriver();
-        driver.get(URL);
-        driver.manage().window().maximize();
     }
 
     @AfterMethod
